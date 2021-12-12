@@ -9,3 +9,109 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id Int @id @unique @default(autoincrement())
+  email String @unique
+  password String
+  fullname String
+  phoneNumber String
+  gender String
+  role String
+  dob DateTime @db.Date
+  address String
+  identityNumber String
+  bookedTours BookedTour[]
+  rate Rate?
+}
+
+model Tour {
+  id Int @id @default(autoincrement())
+  name String
+  departure String
+  departureTime DateTime
+  days Float
+  priec Float
+  desc String
+  maxPeople Int
+  sold Int
+  flight String
+  destination Destination @relation(fields: [destinationId], references: [id])
+  destinationId Int
+  rate Rate?
+  tourservices TourService[]
+}
+
+model Plan {
+  id Int @id @default(autoincrement())
+  destination Destination @relation(fields: [destinationID], references: [id])
+  destinationID Int
+  dayplans DayPlan[]
+}
+
+model DayPlan {
+  id Int @id @default(autoincrement())
+  day Int
+  title String
+  desc String
+  plan Plan @relation(fields: [planId], references: [id])
+  planId Int
+}
+
+model BookedTour {
+  id Int @id @unique @default(autoincrement())
+  num_of_people Int
+  isAccepted Boolean @default(false)
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+  invoice Invoice?
+}
+
+model Invoice {
+  id Int @id @default(autoincrement())
+  totalPrice Float
+  invoiceDate DateTime @db.Date
+  bookedTour BookedTour @relation(fields: [bookedTourId], references: [id])
+  bookedTourId Int
+}
+
+model Rate {
+  id Int @id @default(autoincrement())
+  star Int
+  comment String
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+  tour Tour @relation(fields: [tourId], references: [id])
+  tourId Int
+}
+
+model Destination {
+  id Int @id @default(autoincrement())
+  name String
+  address String
+  desc String
+  tours Tour[]
+  plans Plan[]
+  images Image[]
+}
+
+model Image {
+  id Int @id @default(autoincrement())
+  url String
+  destination Destination @relation(fields: [destinationID], references: [id])
+  destinationID Int
+}
+
+model Service {
+  id Int @id @default(autoincrement())
+  name String
+  tourservices TourService[]
+}
+
+model TourService {
+  id Int @id @default(autoincrement())
+  tour Tour @relation(fields: [tourId], references: [id])
+  tourId Int
+  service Service @relation(fields: [serviceId], references: [id])
+  serviceId Int
+}

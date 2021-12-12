@@ -6,7 +6,7 @@ const route = require('./routes/index')
 
 const app = express();
 
-require('dotenv').config({ path: 'src/.env' })
+require('dotenv').config()
 
 app.use(cors());
 app.use(morgan('combined'));
@@ -16,7 +16,6 @@ app.use(express.urlencoded({
 }));
 
 route(app);
-
 app.listen(port, () => {
   console.log(`Server started at port: ${port}`)
 })

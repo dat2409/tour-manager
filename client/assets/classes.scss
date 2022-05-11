@@ -1,0 +1,37 @@
+.bg-gradient-primary {
+  background: linear-gradient(98deg, #c48eff, #42A5F5 94%);
+}
+
+.bg-gradient-warning {
+  background: linear-gradient(98deg, #ee8453, #e40d0d 94%);
+}
+
+.greetings-text-gradient {
+  background: -webkit-linear-gradient(98deg, #27dd6d, #ddec4f 74%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.contain {
+  position: relative;
+  text-align: center;
+}
+
+.text-image-header-satisfy {
+  font-family: "Satisfy", cursive;
+}
+
+.text-image-header {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.v-tab--active {
+  background-color: white;
+}
+
+.v-tab--active span {
+  color: #4dd0e1;
+}

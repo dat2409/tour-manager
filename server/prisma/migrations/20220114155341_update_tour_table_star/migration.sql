@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `tour` ADD COLUMN `numberOfReviews` INTEGER NOT NULL DEFAULT 0,
+    ADD COLUMN `star` DOUBLE NOT NULL DEFAULT 0;

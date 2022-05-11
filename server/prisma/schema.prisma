@@ -11,107 +11,137 @@ datasource db {
 }
 
 model User {
-  id Int @id @unique @default(autoincrement())
-  email String @unique
-  password String
-  fullname String
-  phoneNumber String
-  gender String
-  role String
-  dob DateTime @db.Date
-  address String
+  id             Int      @id @unique @default(autoincrement())
+  email          String   @unique
+  password       String
+  fullName       String
+  phoneNumber    String
+  gender         String
+  role           Role     @default(STAFF)
+  dob            DateTime @db.Date
+  address        String
   identityNumber String
-  bookedTours BookedTour[]
-  rate Rate?
 }
 
 model Tour {
-  id Int @id @default(autoincrement())
-  name String
-  departure String
-  departureTime DateTime
-  days Float
-  priec Float
-  desc String
-  maxPeople Int
-  sold Int
-  flight String
-  destination Destination @relation(fields: [destinationId], references: [id])
-  destinationId Int
-  rate Rate?
-  tourservices TourService[]
+  id              Int           @id @default(autoincrement())
+  name            String
+  departure       String
+  departureTime   DateTime
+  price           Float
+  desc            String        @db.LongText
+  maxPeople       Int
+  sold            Int           @default(0)
+  flight          String
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  plan            Plan          @relation(fields: [planId], references: [id], onDelete: Cascade)
+  planId          Int
+  star            Float         @default(0)
+  numberOfReviews Int           @default(0)
+  status          Int           @default(0) //0: notYetDeparted _ 1: departed _ 2: finished
+  services        TourService[]
+  orders          Order[]
+  reviews         Review[]
 }
 
 model Plan {
-  id Int @id @default(autoincrement())
-  destination Destination @relation(fields: [destinationID], references: [id])
-  destinationID Int
-  dayplans DayPlan[]
+  id            Int         @id @default(autoincrement())
+  name          String
+  destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  destinationId Int
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  dayplans      DayPlan[]
+  tours         Tour[]
 }
 
 model DayPlan {
-  id Int @id @default(autoincrement())
-  day Int
-  title String
-  desc String
-  plan Plan @relation(fields: [planId], references: [id])
-  planId Int
+  id        Int      @id @default(autoincrement())
+  day       Int
+  title     String
+  desc      String   @db.LongText
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  plan      Plan     @relation(fields: [planId], references: [id], onDelete: Cascade)
+  planId    Int
 }
 
-model BookedTour {
-  id Int @id @unique @default(autoincrement())
-  num_of_people Int
-  isAccepted Boolean @default(false)
-  user User @relation(fields: [userId], references: [id])
-  userId Int
-  invoice Invoice?
+model Order {
+  id          Int      @id @unique @default(autoincrement())
+  fullName    String
+  email       String
+  phoneNumber String
+  address     String
+  note        String   @db.LongText
+  quantity    Int
+  totalPrice  Float
+  status      Int      @default(0) //0: notDeposited _ 1: joinedTour _ 2: completedPayment _ 3: cancelled
+  tour        Tour     @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  tourId      Int
+  invoice     Invoice?
+  is_reviewed Boolean  @default(false)
 }
 
 model Invoice {
-  id Int @id @default(autoincrement())
-  totalPrice Float
-  invoiceDate DateTime @db.Date
-  bookedTour BookedTour @relation(fields: [bookedTourId], references: [id])
-  bookedTourId Int
-}
-
-model Rate {
-  id Int @id @default(autoincrement())
-  star Int
-  comment String
-  user User @relation(fields: [userId], references: [id])
-  userId Int
-  tour Tour @relation(fields: [tourId], references: [id])
-  tourId Int
+  id          Int      @id @default(autoincrement())
+  depositedAt DateTime @default(now())
+  paidAt      DateTime @updatedAt
+  isPaid      Boolean  @default(false)
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId     Int      @unique
 }
 
 model Destination {
-  id Int @id @default(autoincrement())
-  name String
-  address String
-  desc String
-  tours Tour[]
-  plans Plan[]
-  images Image[]
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  address   String
+  desc      String   @db.LongText
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  plans     Plan[]
+  images    Image[]
 }
 
 model Image {
-  id Int @id @default(autoincrement())
-  url String
-  destination Destination @relation(fields: [destinationID], references: [id])
+  id            Int         @id @default(autoincrement())
+  url           String
+  destination   Destination @relation(fields: [destinationID], references: [id], onDelete: Cascade)
   destinationID Int
 }
 
 model Service {
-  id Int @id @default(autoincrement())
-  name String
-  tourservices TourService[]
+  id    Int           @id @default(autoincrement())
+  name  String        @unique
+  tours TourService[]
 }
 
 model TourService {
-  id Int @id @default(autoincrement())
-  tour Tour @relation(fields: [tourId], references: [id])
-  tourId Int
-  service Service @relation(fields: [serviceId], references: [id])
+  tour      Tour    @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  tourId    Int
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
   serviceId Int
+
+  @@id([tourId, serviceId])
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  email     String
+  name      String
+  star      Int
+  comment   String   @db.LongText
+  tour      Tour     @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  tourId    Int
+  createdAt DateTime @default(now())
+}
+
+model Policy {
+  id      Int    @id @default(autoincrement())
+  content String @db.LongText
+}
+
+enum Role {
+  STAFF
+  MANAGER
 }

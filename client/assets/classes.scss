@@ -6,10 +6,20 @@
   background: linear-gradient(98deg, #ee8453, #e40d0d 94%);
 }
 
+.text-gradient {
+  background: -webkit-linear-gradient(98deg, #c48eff, #42A5F5 94%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .greetings-text-gradient {
   background: -webkit-linear-gradient(98deg, #27dd6d, #ddec4f 74%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+.border-circle-right {
+  border-radius: 0 50px 50px 0;
 }
 
 .contain {

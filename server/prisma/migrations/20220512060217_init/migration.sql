@@ -30,6 +30,9 @@ CREATE TABLE `Tour` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `planId` INTEGER NOT NULL,
+    `star` DOUBLE NOT NULL DEFAULT 0,
+    `numberOfReviews` INTEGER NOT NULL DEFAULT 0,
+    `status` INTEGER NOT NULL DEFAULT 0,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -68,8 +71,9 @@ CREATE TABLE `Order` (
     `note` LONGTEXT NOT NULL,
     `quantity` INTEGER NOT NULL,
     `totalPrice` DOUBLE NOT NULL,
-    `isDeposited` BOOLEAN NOT NULL DEFAULT false,
+    `status` INTEGER NOT NULL DEFAULT 0,
     `tourId` INTEGER NOT NULL,
+    `is_reviewed` BOOLEAN NOT NULL DEFAULT false,
 
     UNIQUE INDEX `Order_id_key`(`id`),
     PRIMARY KEY (`id`)
@@ -126,6 +130,27 @@ CREATE TABLE `TourService` (
     PRIMARY KEY (`tourId`, `serviceId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+-- CreateTable
+CREATE TABLE `Review` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `email` VARCHAR(191) NOT NULL,
+    `name` VARCHAR(191) NOT NULL,
+    `star` INTEGER NOT NULL,
+    `comment` LONGTEXT NOT NULL,
+    `tourId` INTEGER NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `policy` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `content` LONGTEXT NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 -- AddForeignKey
 ALTER TABLE `Tour` ADD CONSTRAINT `Tour_planId_fkey` FOREIGN KEY (`planId`) REFERENCES `Plan`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -149,3 +174,6 @@ ALTER TABLE `TourService` ADD CONSTRAINT `TourService_tourId_fkey` FOREIGN KEY (
 
 -- AddForeignKey
 ALTER TABLE `TourService` ADD CONSTRAINT `TourService_serviceId_fkey` FOREIGN KEY (`serviceId`) REFERENCES `Service`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Review` ADD CONSTRAINT `Review_tourId_fkey` FOREIGN KEY (`tourId`) REFERENCES `Tour`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

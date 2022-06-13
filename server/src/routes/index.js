@@ -5,6 +5,7 @@ const serviceRouter = require('./service');
 const planRouter = require('./plan');
 const tourRouter = require('./tour');
 const bookingRouter = require('./booking');
+const bookingManagerRouter = require('./bookingManager');
 const reviewRouter = require('./review');
 const auth = require('../middleware/auth');
 
@@ -27,8 +28,10 @@ function route(app) {
   app.use('/services', serviceRouter);
   app.use('/plans', planRouter);
   app.use('/tours', tourRouter);
+  app.use('/booking-manager', bookingManagerRouter);
   app.use('/booking', bookingRouter);
   app.use('/reviews', reviewRouter);
+
 }
 
 module.exports = route;

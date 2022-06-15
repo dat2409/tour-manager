@@ -42,12 +42,15 @@
         <v-icon>mdi-application</v-icon>
       </v-btn>
       <v-spacer />
+      <admin-nav-user />
     </v-app-bar>
   </nav>
 </template>
 
 <script>
+import AdminNavUser from "./AdminNavUser.vue";
 export default {
+  components: { AdminNavUser },
   data() {
     return {
       clipped: false,

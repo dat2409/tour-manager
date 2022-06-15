@@ -11,14 +11,14 @@ datasource db {
 }
 
 model User {
-  id             Int      @id @unique @default(autoincrement())
-  email          String?  @unique
+  id             Int       @id @unique @default(autoincrement())
+  email          String?   @unique
   password       String?
   fullName       String?
   phoneNumber    String?
   gender         String?
-  role           Role     @default(STAFF)
-  dob            DateTime @db.Date
+  role           Role      @default(STAFF)
+  dob            DateTime? @db.Date
   address        String?
   identityNumber String?
   image          String?
@@ -82,19 +82,22 @@ model DayPlan {
 }
 
 model Order {
-  id          Int      @id @unique @default(autoincrement())
-  note        String?  @db.LongText
-  quantity    Int?
-  totalPrice  Float?
-  isDeposited Boolean  @default(false) //0: notDeposited _ 1: joinedTour _ 2: completedPayment _ 3: cancelled
-  hasDeparted Int?
-  tour        Tour?    @relation(fields: [tourId], references: [id], onDelete: Cascade)
-  tourId      Int?
-  invoice     Invoice?
-  isReviewed  Boolean  @default(false)
-  guessInfos  Guess[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                  Int      @id @unique @default(autoincrement())
+  note                String?  @db.LongText
+  quantity            Int?
+  totalPrice          Float?
+  isDeposited         Boolean  @default(false)
+  hasDeparted         Int?
+  tour                Tour?    @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  tourId              Int?
+  invoice             Invoice?
+  isReviewed          Boolean  @default(false)
+  guessInfos          Guess[]
+  teamLeadName        String?
+  teamLeadPhoneNumber String?
+  teamLeadEmail       String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 }
 
 model Invoice {

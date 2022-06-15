@@ -1,0 +1,22 @@
+{
+  "name": "tour-manager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dcc": "docker-compose",
+    "start:server": "cd server && npm start",
+    "start:client": "cd client && npm run dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dat2409/tour-manager.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dat2409/tour-manager/issues"
+  },
+  "homepage": "https://github.com/dat2409/tour-manager#readme"
+}

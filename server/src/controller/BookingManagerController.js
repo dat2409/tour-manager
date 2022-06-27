@@ -90,7 +90,7 @@ class BookingManagerController {
               <li>Address: ${thisOrder.address}</li>
               <li>Note: ${thisOrder.note}</li>
               <li>Total: ${thisOrder.totalPrice} ($)</li>
-              <li>Deposited: ${thisOrder.totalPrice * 0.7} ($)</li>
+              <li>Deposited: ${thisOrder.totalPrice} ($)</li>
             </ul>
           </div>
         </div>

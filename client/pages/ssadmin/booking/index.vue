@@ -50,23 +50,16 @@ export default {
         {
           text: "Full Name",
           align: "start",
-          value: "fullName",
+          value: "teamLeadName",
+          width: '15%'
         },
         {
           text: "Email",
-          value: "email",
+          value: "teamLeadEmail",
         },
         {
           text: "Phone Number",
-          value: "phoneNumber",
-        },
-        {
-          text: "Address",
-          value: "address",
-        },
-        {
-          text: "Note",
-          value: "note",
+          value: "teamLeadPhoneNumber",
         },
         {
           text: "Quantity",

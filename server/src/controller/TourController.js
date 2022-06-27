@@ -1,4 +1,4 @@
-const { PrismaClient, Prisma } = require('@prisma/client');
+const { PrismaClient, Prisma } = require("@prisma/client");
 const { tourService, tour, plan, destination } = new PrismaClient();
 const prisma = new PrismaClient();
 class TourController {
@@ -7,10 +7,20 @@ class TourController {
    * /tours/
    */
   create(req, res, next) {
-    const { name, departure, departureDay, departureTimeReq, price, desc, maxPeople,
-      flight, planId, services } = req.body;
+    const {
+      name,
+      departure,
+      departureDay,
+      departureTimeReq,
+      price,
+      desc,
+      maxPeople,
+      flight,
+      plan,
+      services,
+    } = req.body;
 
-    const departureTime = new Date(`${departureDay} ${departureTimeReq}`)
+    const departureTime = new Date(`${departureDay} ${departureTimeReq}`);
 
     const listServices = [];
     for (var i = 0; i < services.length; i++) {
@@ -18,27 +28,30 @@ class TourController {
         service: {
           connect: {
             name: services[i],
-          }
-        }
-      }
+          },
+        },
+      };
     }
 
-    tour.create({
-      data: {
-        name,
-        departure,
-        departureTime,
-        price,
-        desc,
-        maxPeople,
-        flight,
-        planId,
-        services: {
-          create: listServices
-        }
-      }
-    })
-      .then(tour => res.send(tour))
+    tour
+      .create({
+        data: {
+          name,
+          departure,
+          departureTime,
+          price,
+          desc,
+          maxPeople,
+          flight,
+          planText: plan,
+          planId: plan.id,
+          services: {
+            create: listServices,
+          },
+          listServices: services,
+        },
+      })
+      .then((tour) => res.send(tour));
   }
 
   /**
@@ -46,32 +59,33 @@ class TourController {
    * /tours/:id
    */
   show(req, res, next) {
-    tour.findUnique({
-      where: {
-        id: parseInt(req.params.id)
-      },
-      include: {
-        plan: {
-          include: {
-            dayplans: true,
-            destination: true
-          }
+    tour
+      .findUnique({
+        where: {
+          id: parseInt(req.params.id),
         },
-        services: {
-          select: {
-            service: {
-              select: {
-                name: true
-              }
-            }
-          }
-        }
-      }
-    })
-      .then(tour => {
-        tour.star = Math.round(tour.star * 10) / 10
-        res.send(tour)
+        include: {
+          plan: {
+            include: {
+              dayplans: true,
+              destination: true,
+            },
+          },
+          services: {
+            select: {
+              service: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+        },
       })
+      .then((tour) => {
+        tour.star = Math.round(tour.star * 10) / 10;
+        res.send(tour);
+      });
   }
 
   /**
@@ -79,30 +93,31 @@ class TourController {
    * /tours/
    */
   index(req, res, next) {
-    tour.findMany({
-      include: {
-        plan: {
-          include: {
-            destination: {
-              include: {
-                images: true
-              }
+    tour
+      .findMany({
+        include: {
+          plan: {
+            include: {
+              destination: {
+                include: {
+                  images: true,
+                },
+              },
+              dayplans: true,
             },
-            dayplans: true
-          }
+          },
+          services: {
+            select: {
+              service: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
         },
-        services: {
-          select: {
-            service: {
-              select: {
-                name: true
-              }
-            }
-          }
-        }
-      }
-    })
-      .then(tour => res.send(tour))
+      })
+      .then((tour) => res.send(tour));
   }
 
   /**
@@ -110,24 +125,25 @@ class TourController {
    * /tours/date-desc
    */
   allToursByDateDesc(req, res, next) {
-    tour.findMany({
-      include: {
-        plan: {
-          include: {
-            destination: {
-              include: {
-                images: true
-              }
+    tour
+      .findMany({
+        include: {
+          plan: {
+            include: {
+              destination: {
+                include: {
+                  images: true,
+                },
+              },
+              dayplans: true,
             },
-            dayplans: true
-          }
+          },
         },
-      },
-      orderBy: {
-        departureTime: 'desc'
-      }
-    })
-      .then(tour => res.send(tour))
+        orderBy: {
+          departureTime: "desc",
+        },
+      })
+      .then((tour) => res.send(tour));
   }
 
   /**
@@ -135,24 +151,25 @@ class TourController {
    * /tours/price-desc
    */
   allToursByPriceDesc(req, res, next) {
-    tour.findMany({
-      include: {
-        plan: {
-          include: {
-            destination: {
-              include: {
-                images: true
-              }
+    tour
+      .findMany({
+        include: {
+          plan: {
+            include: {
+              destination: {
+                include: {
+                  images: true,
+                },
+              },
+              dayplans: true,
             },
-            dayplans: true
-          }
+          },
         },
-      },
-      orderBy: {
-        price: 'desc'
-      }
-    })
-      .then(tour => res.send(tour))
+        orderBy: {
+          price: "desc",
+        },
+      })
+      .then((tour) => res.send(tour));
   }
 
   /**
@@ -160,24 +177,25 @@ class TourController {
    * /tours/price-asc
    */
   allToursByPriceAsc(req, res, next) {
-    tour.findMany({
-      include: {
-        plan: {
-          include: {
-            destination: {
-              include: {
-                images: true
-              }
+    tour
+      .findMany({
+        include: {
+          plan: {
+            include: {
+              destination: {
+                include: {
+                  images: true,
+                },
+              },
+              dayplans: true,
             },
-            dayplans: true
-          }
+          },
         },
-      },
-      orderBy: {
-        price: 'asc'
-      }
-    })
-      .then(tour => res.send(tour))
+        orderBy: {
+          price: "asc",
+        },
+      })
+      .then((tour) => res.send(tour));
   }
 
   /**
@@ -185,28 +203,29 @@ class TourController {
    * /tours/edit/:id
    */
   edit(req, res, next) {
-    tour.findUnique({
-      where: {
-        id: parseInt(req.params.id)
-      },
-      include: {
-        plan: {
-          select: {
-            name: true
-          }
+    tour
+      .findUnique({
+        where: {
+          id: parseInt(req.params.id),
         },
-        services: {
-          select: {
-            service: {
-              select: {
-                name: true
-              }
-            }
-          }
-        }
-      }
-    })
-      .then(tour => res.send(tour))
+        include: {
+          plan: {
+            select: {
+              name: true,
+            },
+          },
+          services: {
+            select: {
+              service: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+      })
+      .then((tour) => res.send(tour));
   }
 
   /**
@@ -215,10 +234,20 @@ class TourController {
    * Xem xét updateMany cho plan where tourId = param id
    */
   update(req, res, next) {
-    const { name, departure, departureDay, departureTimeReq, price, desc, maxPeople,
-      flight, planId, services } = req.body;
+    const {
+      name,
+      departure,
+      departureDay,
+      departureTimeReq,
+      price,
+      desc,
+      maxPeople,
+      flight,
+      planId,
+      services,
+    } = req.body;
 
-    const departureTime = new Date(`${departureDay} ${departureTimeReq}`)
+    const departureTime = new Date(`${departureDay} ${departureTimeReq}`);
 
     const listServices = [];
     for (var i = 0; i < services.length; i++) {
@@ -226,37 +255,39 @@ class TourController {
         service: {
           connect: {
             name: services[i],
-          }
-        }
-      }
+          },
+        },
+      };
     }
 
-    tourService.deleteMany({
-      where: {
-        tourId: parseInt(req.params.id)
-      }
-    })
-      .then(() => {
-        tour.update({
-          where: {
-            id: parseInt(req.params.id)
-          },
-          data: {
-            name,
-            departure,
-            departureTime,
-            price,
-            desc,
-            maxPeople,
-            flight,
-            planId,
-            services: {
-              create: listServices
-            }
-          }
-        })
-          .then(tour => res.send(tour))
+    tourService
+      .deleteMany({
+        where: {
+          tourId: parseInt(req.params.id),
+        },
       })
+      .then(() => {
+        tour
+          .update({
+            where: {
+              id: parseInt(req.params.id),
+            },
+            data: {
+              name,
+              departure,
+              departureTime,
+              price,
+              desc,
+              maxPeople,
+              flight,
+              planId,
+              services: {
+                create: listServices,
+              },
+            },
+          })
+          .then((tour) => res.send(tour));
+      });
   }
 
   /**
@@ -264,69 +295,70 @@ class TourController {
    * /tours/:id
    */
   delete(req, res, next) {
-    tourService.deleteMany({
-      where: {
-        tourId: parseInt(req.params.id)
-      }
-    })
-      .then(() => {
-        tour.delete({
-          where: {
-            id: parseInt(req.params.id)
-          }
-        })
-          .then(tour => res.send(tour))
+    tourService
+      .deleteMany({
+        where: {
+          tourId: parseInt(req.params.id),
+        },
       })
+      .then(() => {
+        tour
+          .delete({
+            where: {
+              id: parseInt(req.params.id),
+            },
+          })
+          .then((tour) => res.send(tour));
+      });
   }
 
   search(req, res, next) {
     const destinationName = req.query.destinationName;
-    const tourName = req.query.tourName || '';
+    const tourName = req.query.tourName || "";
     if (req.query.from) {
-      var from = new Date(req.query.from)
+      var from = new Date(req.query.from);
+    } else {
+      var from = new Date("1000-01-01");
     }
-    else {
-      var from = new Date('1000-01-01')
-    };
 
     if (req.query.to) {
-      var to = new Date(req.query.to)
+      var to = new Date(req.query.to);
+    } else {
+      var to = new Date("3000-01-01");
     }
-    else {
-      var to = new Date('3000-01-01')
-    };
 
-    tour.findMany({
-      where: {
-        plan: {
-          destination: {
-            name: {
-              contains: destinationName
-            }
-          }
-        },
-        departureTime: {
-          gte: from,
-          lte: to
-        },
-        name: {
-          contains: tourName
-        }
-      },
-      include: {
-        plan: {
-          include: {
+    tour
+      .findMany({
+        where: {
+          plan: {
             destination: {
-              include: {
-                images: true
-              }
+              name: {
+                contains: destinationName,
+              },
             },
-            dayplans: true
-          }
+          },
+          departureTime: {
+            gte: from,
+            lte: to,
+          },
+          name: {
+            contains: tourName,
+          },
         },
-      }
-    })
-      .then(tours => {
+        include: {
+          plan: {
+            include: {
+              destination: {
+                include: {
+                  images: true,
+                },
+              },
+              dayplans: true,
+            },
+          },
+        },
+      })
+      .then((tours) => {
         res.send(tours);
       });
   }

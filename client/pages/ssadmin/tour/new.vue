@@ -147,7 +147,7 @@ export default {
         desc: this.desc,
         maxPeople: parseInt(this.maxPeople),
         flight: this.flight,
-        planId: this.selectedPlan.id,
+        plan: this.selectedPlan,
         services,
       };
 

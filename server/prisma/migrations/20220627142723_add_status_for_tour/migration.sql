@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE `Tour` ADD COLUMN `isPublic` BOOLEAN NOT NULL DEFAULT true,
+    ADD COLUMN `isSold` BOOLEAN NOT NULL DEFAULT true,
+    ADD COLUMN `planText` JSON NULL,
+    MODIFY `planId` INTEGER NULL;

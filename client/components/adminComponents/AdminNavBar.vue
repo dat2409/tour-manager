@@ -11,6 +11,7 @@
         <v-list-item-group
           v-model="choose"
           active-class="bg-gradient-primary border-circle-right white--text"
+          class="mr-1"
         >
           <v-list-item
             v-for="(item, i) in items"

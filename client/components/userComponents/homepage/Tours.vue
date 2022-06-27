@@ -75,6 +75,7 @@ export default {
   created() {
     this.$axios.get("/tours").then((tours) => {
       this.tours = tours.data;
+      console.log(tours.data)
     });
   },
 };

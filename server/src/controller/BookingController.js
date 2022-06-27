@@ -1,8 +1,5 @@
-const Queue = require("bull");
 const { PrismaClient } = require("@prisma/client");
 const { order } = new PrismaClient();
-const nodemailer = require("nodemailer");
-const { REDIS_URL, USER_EMAIL, PASSWORD_EMAIL } = process.env;
 const sendMail = require("../helpers/send-mail");
 
 class BookingController {
@@ -51,7 +48,7 @@ class BookingController {
               <li>Quantity: ${newOrder.quantity}</li>
               <li>Note: ${newOrder.note}</li>
               <li>Total: ${newOrder.totalPrice} ($)</li>
-              <li>Amount of deposit: ${newOrder.totalPrice * 0.7} ($)</li>
+              <li>Amount of deposit: ${newOrder.totalPrice} ($)</li>
             </h3>
           </ul>
           <h2>Please pay the deposit according to the following information:</h2>

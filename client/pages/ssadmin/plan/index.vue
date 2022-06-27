@@ -1,7 +1,7 @@
 <template>
-  <div class="mt-3">
+  <div class="mt-3 ml-3 mr-3">
     <v-row class="mb-2">
-      <h1 class="text-gradient text-capitalize">plans for every destination</h1>
+      <h1 class="text-gradient text-capitalize">plans</h1>
       <v-spacer></v-spacer>
       <NuxtLink to="/ssadmin/plan/new" class="text-decoration-none">
         <v-btn class="bg-gradient-primary" dark>Create new plan</v-btn>

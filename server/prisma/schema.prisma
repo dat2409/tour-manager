@@ -39,6 +39,8 @@ model Guess {
 
 model Tour {
   id              Int           @id @default(autoincrement())
+  isPublic        Boolean       @default(true)
+  isSold          Boolean       @default(true)
   name            String
   departure       String
   departureTime   DateTime
@@ -47,8 +49,10 @@ model Tour {
   maxPeople       Int
   sold            Int           @default(0)
   flight          String
-  plan            Plan          @relation(fields: [planId], references: [id], onDelete: Cascade)
-  planId          Int
+  plan            Plan?         @relation(fields: [planId], references: [id], onDelete: Cascade)
+  planId          Int?
+  planText        Json?
+  listServices    Json?
   star            Float         @default(0)
   numberOfReviews Int           @default(0)
   status          Int           @default(0) //0: notYetDeparted _ 1: departed _ 2: finished

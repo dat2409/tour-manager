@@ -8,16 +8,11 @@ class TourController {
    */
   create(req, res, next) {
     const {
-      name,
-      departure,
       departureDay,
       departureTimeReq,
-      price,
-      desc,
-      maxPeople,
-      flight,
       plan,
       services,
+      ...data
     } = req.body;
 
     const departureTime = new Date(`${departureDay} ${departureTimeReq}`);
@@ -36,19 +31,14 @@ class TourController {
     tour
       .create({
         data: {
-          name,
-          departure,
           departureTime,
-          price,
-          desc,
-          maxPeople,
-          flight,
           planText: plan,
           planId: plan.id,
           services: {
             create: listServices,
           },
           listServices: services,
+          ...data,
         },
       })
       .then((tour) => res.send(tour));

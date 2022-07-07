@@ -9,28 +9,11 @@ class BookingController {
    */
   async create(req, res, next) {
     const tourId = parseInt(req.params.tourId);
-    const {
-      quantity,
-      totalPrice,
-      note,
-      guessInfos,
-      teamLeadName,
-      teamLeadPhoneNumber,
-      teamLeadEmail,
-    } = req.body;
 
     const newOrder = await order.create({
       data: {
         tourId,
-        note,
-        quantity,
-        totalPrice,
-        teamLeadName,
-        teamLeadPhoneNumber,
-        teamLeadEmail,
-        guessInfos: {
-          create: guessInfos,
-        },
+        ...req.body,
       },
     });
 

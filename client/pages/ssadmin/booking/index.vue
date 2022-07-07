@@ -20,6 +20,9 @@
     </template>
     <template v-slot:[`item.actions`]="{ item }">
       <v-icon small @click="deleteItemConfirm(item)"> mdi-delete </v-icon>
+      <v-icon small @click="addGuestsInfo(item)">
+        mdi-account-multiple-plus-outline
+      </v-icon>
     </template>
     <template v-slot:[`item.isDeposited`]="{ item }">
       <v-chip
@@ -51,7 +54,7 @@ export default {
           text: "Full Name",
           align: "start",
           value: "teamLeadName",
-          width: '15%'
+          width: "15%",
         },
         {
           text: "Email",
@@ -142,10 +145,15 @@ export default {
           });
       }
     },
+    addGuestsInfo(booking) {
+      this.$router.push({
+        path: "/ssadmin/guest/add-info",
+        query: { bookingId: booking.id },
+      });
+    },
   },
   middleware: ["isAuthenticated"],
 };
 </script>
 
-<style>
-</style>
+<style></style>

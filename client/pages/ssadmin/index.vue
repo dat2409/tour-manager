@@ -16,7 +16,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col align="center" class="body-1">Statistics about Number of Guests and Total Money</v-col>
+      <v-col align="center" class="body-1" cols="12" md="9">Number of Guests and Total Money</v-col>
     </v-row>
   </v-container>
 </template>

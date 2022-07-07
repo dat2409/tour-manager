@@ -25,17 +25,14 @@
             label="Day"
             v-model="dayPlan.day"
             type="number"
-            :name="`workExperiences[${index}][day]`"
           />
           <v-text-field
             label="Title"
             v-model="dayPlan.title"
-            :name="`workExperiences[${index}][title]`"
           />
           <v-textarea
             label="Description"
             v-model="dayPlan.desc"
-            :name="`workExperiences[${index}][desc]`"
           />
           <v-row>
             <v-spacer></v-spacer>
@@ -106,13 +103,13 @@ export default {
         destinationId: this.selectedDestination.id,
         dayPlans: this.dayPlans,
       };
-      this.$axios
-        .post("/plans", plan)
-        .then(() => this.$router.push("/ssadmin/plan"));
+      this.$axios.post("/plans", plan).then(() => {
+        this.$fetch();
+        this.$router.push("/ssadmin/plan");
+      });
     },
   },
 };
 </script>
 
-<style>
-</style>
+<style></style>

@@ -87,6 +87,7 @@ model DayPlan {
 
 model Order {
   id                  Int      @id @unique @default(autoincrement())
+  isCompanyTour       Boolean  @default(false)
   note                String?  @db.LongText
   quantity            Int?
   totalPrice          Float?

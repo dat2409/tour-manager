@@ -29,8 +29,6 @@ const send = async (mailInfos) => {
     html: mailInfos.html || '',
   }
 
-  console.log(validatedMailInfos)
-
   const sentResult = await mailer.sendMail(validatedMailInfos).catch((err) => {
     console.log(err)
     return {

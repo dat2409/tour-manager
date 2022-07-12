@@ -3,83 +3,54 @@
     <v-card-title>
       <span class="text-h5">Add Guests Information</span>
     </v-card-title>
-        <v-text-field label="Booking ID" v-model="bookingId" disabled outlined class="mx-7"/>
+    <v-row>
+      <v-col cols="12" md="3"
+        ><v-text-field
+          label="Booking ID"
+          v-model="bookingId"
+          disabled
+          outlined
+          class="ml-7"
+          hide-details
+      /></v-col>
+      <v-col cols="12" md="9"
+        ><v-file-input
+          label="Upload a file of guests information"
+          @change="onChange"
+          outlined
+          hide-details
+          show-size
+          class="mr-7"
+      /></v-col>
+    </v-row>
 
-    <v-form @submit.prevent="updateGuestsInfo" ref="form">
+    <v-form @submit.prevent="saveGuestsInfo" ref="form">
       <v-card-text>
-        <v-divider></v-divider>
-        <v-container
-          v-for="(guest, index) in guests"
-          :key="index"
-          class="border-day-plan"
-        >
-          <v-row>
-            <v-col cols="12" md="4"
-              ><v-text-field
-                ref="inputRef"
-                label="Full name"
-                v-model="guest.fullName"
-                outlined
-                hide-details
-            /></v-col>
-            <v-col cols="12" md="4"
-              ><v-text-field
-                label="Email"
-                v-model="guest.email"
-                outlined
-                hide-details
-            /></v-col>
-            <v-col cols="12" md="4"
-              ><v-file-input
-                label="Avatar"
-                v-model="guest.image"
-                outlined
-                hide-details
-                show-size
-            /></v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="12" md="4"
-              ><v-text-field
-                label="Phone number"
-                v-model="guest.phoneNumber"
-                outlined
-                hide-details
-            /></v-col>
-            <v-col cols="12" md="4"
-              ><v-text-field
-                label="Identity Number"
-                v-model="guest.identityNumber"
-                outlined
-                hide-details
-            /></v-col>
-            <v-col cols="12" md="4"
-              ><v-text-field
-                label="Insurance Card Number"
-                v-model="guest.insuranceCardNumber"
-                outlined
-                hide-details
-            /></v-col>
-          </v-row>
-
-          <v-row>
-            <v-spacer></v-spacer>
-            <v-btn
-              @click="deleteGuest(index)"
-              class="bg-gradient-warning ma-3 overline"
-              dark
-              icon
-              >x</v-btn
-            ></v-row
+        <v-row>
+          <v-col cols="12" md="12">
+            <v-data-table
+              v-if="guestsInfoFromFile"
+              :headers="headers"
+              :items="guestsInfoFromFile"
+              class="elevation-1"
+            >
+              <template v-slot:[`item.image`]="{ item }">
+                <a :href="item.image" target="_blank">View</a>
+              </template>
+            </v-data-table></v-col
           >
-        </v-container>
-        <v-btn @click="addGuest" class="bg-gradient-primary" dark icon>+</v-btn>
+        </v-row>
       </v-card-text>
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn class="bg-gradient-primary" dark type="submit">
-          Create plan
+        <v-btn
+          v-if="guestsInfoFromFile"
+          class="bg-gradient-primary"
+          dark
+          type="submit"
+        >
+          Save information
         </v-btn>
       </v-card-actions>
     </v-form>
@@ -87,6 +58,14 @@
 </template>
 
 <script>
+const keys = [
+  "fullName",
+  "email",
+  "phoneNumber",
+  "identityNumber",
+  "insuranceCardNumber",
+  "image",
+];
 export default {
   layout: "admin",
   data() {
@@ -101,6 +80,23 @@ export default {
           insuranceCardNumber: "",
           image: [],
         },
+      ],
+      guestsInfoFromFile: null,
+      headers: [
+        {
+          text: "Name",
+          align: "start",
+          value: "fullName",
+        },
+        { text: "Email", value: "email" },
+        {
+          text: "Phone Number",
+          value: "phoneNumber",
+          filterable: false,
+        },
+        { text: "Identity Number", value: "identityNumber" },
+        { text: "Insurance Card", value: "insuranceCardNumber" },
+        { text: "Avatar", value: "image" },
       ],
     };
   },
@@ -118,13 +114,45 @@ export default {
     deleteGuest(index) {
       if (this.guests.length > 1) {
         this.guests.splice(index, 1);
-      }
-      else {
-        this.$refs.form.reset()
+      } else {
+        this.$refs.form.reset();
       }
     },
-    updateGuestsInfo() {
-      console.log(this.guests);
+    onChange(file) {
+      if (file) {
+        const fileReader = new FileReader();
+        fileReader.readAsText(file, "UTF-8");
+        fileReader.onload = (e) => {
+          const content = e.target.result;
+          const guestsInfo = content
+            .split("\n")
+            .filter((e) => !!e)
+            .map((e) => e.trim())
+            .map((e) => e.split(",").map((e) => e.trim()));
+          this.guestsInfoFromFile = this.formatData(keys, guestsInfo);
+        };
+      }
+    },
+    saveGuestsInfo() {
+      const guestsInfo = JSON.parse(JSON.stringify(this.guestsInfoFromFile))
+      guestsInfo.push({
+        bookingId: +this.bookingId
+      })
+      this.$axios.post("/guestsInfo", guestsInfo).then(() => {
+        this.$swal.fire("Save guests information successfully.", "", "success");
+      });
+    },
+    formatData(keys, guests) {
+      guests.shift();
+      const formattedData = guests.map((item) => {
+        item.shift();
+        const guest = [];
+        item.map((value, index) => {
+          guest.push([keys[index], value]);
+        });
+        return Object.fromEntries(guest);
+      });
+      return formattedData;
     },
   },
   middleware: ["isAuthenticated"],

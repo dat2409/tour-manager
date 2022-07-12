@@ -6,7 +6,9 @@
   "scripts": {
     "dcc": "docker-compose",
     "start:server": "cd server && npm start",
-    "start:client": "cd client && npm run dev"
+    "start:client": "cd client && npm run dev",
+    "staging:clean": "git fetch hoi --prune 'refs/tags/*:refs/tags/*' && git push hoi --delete $(git tag -l 'staging-*') || true && git fetch hoi --prune 'refs/tags/*:refs/tags/*'",
+    "staging:deploy": "yarn staging:clean && TAG=`echo staging-$(date +%Y%m%d-%H%M%S)` && git tag $TAG && git push hoi $TAG"
   },
   "repository": {
     "type": "git",

@@ -7,7 +7,7 @@ steps:
     args:
       - '-c'
       - |
-        gcloud secrets versions access latest --project=${PROJECT_ID} --secret=${_APP_NAME} --format='get(payload.data)' | tr '_-' '/+' | base64 -d > .env
+        gcloud secrets versions access latest --project=${PROJECT_ID} --secret=${_APP_NAME} --format='get(payload.data)' | tr '_-' '/+' | base64 -d > server/.env
   # this builds app docker image
   - id: 'build-app-image'
     name: 'gcr.io/kaniko-project/executor:latest'

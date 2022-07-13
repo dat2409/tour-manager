@@ -7,10 +7,10 @@
     "dcc": "docker-compose",
     "start:server": "cd server && npm start",
     "start:client": "cd client && npm run dev",
-    "staging:clean": "git fetch hoi --prune 'refs/tags/*:refs/tags/*' && git push hoi --delete $(git tag -l 'staging-*') || true && git fetch hoi --prune 'refs/tags/*:refs/tags/*'",
-    "staging:clean:api": "git fetch hoi --prune 'refs/tags/*:refs/tags/*' && git push hoi --delete $(git tag -l 'staging-api-*') || true && git fetch hoi --prune 'refs/tags/*:refs/tags/*'",
-    "staging:deploy:fe": "yarn staging:clean && TAG=`echo staging-$(date +%Y%m%d-%H%M%S)` && git tag $TAG && git push hoi $TAG",
-    "staging:deploy:api": "yarn staging:clean:api && TAG=`echo staging-api-$(date +%Y%m%d-%H%M%S)` && git tag $TAG && git push hoi $TAG"
+    "staging:clean:fe": "git fetch origin --prune 'refs/tags/*:refs/tags/*' && git push origin --delete $(git tag -l 'staging-fe-*') || true && git fetch origin --prune 'refs/tags/*:refs/tags/*'",
+    "staging:clean:api": "git fetch origin --prune 'refs/tags/*:refs/tags/*' && git push origin --delete $(git tag -l 'staging-api-*') || true && git fetch origin --prune 'refs/tags/*:refs/tags/*'",
+    "staging:deploy:fe": "yarn staging:clean:fe && TAG=`echo staging-fe-$(date +%Y%m%d-%H%M%S)` && git tag $TAG && git push origin $TAG",
+    "staging:deploy:api": "yarn staging:clean:api && TAG=`echo staging-api-$(date +%Y%m%d-%H%M%S)` && git tag $TAG && git push origin $TAG"
   },
   "repository": {
     "type": "git",
